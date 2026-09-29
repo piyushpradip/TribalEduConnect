@@ -18,6 +18,7 @@ import { MyApplicationsTab } from './components/Applicant/MyApplicationsTab';
 import { FellowshipPortal } from './components/Fellowship/FellowshipPortal';
 import { AiScrutinyTab } from './components/AiScrutiny/AiScrutinyTab';
 import { MinistryAnalyticsDashboard } from './components/Analytics/MinistryAnalyticsDashboard';
+import { GrievancePortal } from './components/Grievance/GrievancePortal';
 
 import { OfficersPortal } from './components/Officers/OfficersPortal';
 import { VerifiersPortal } from './components/Verifiers/VerifiersPortal';
@@ -73,6 +74,9 @@ const MainPortalContent: React.FC = () => {
 
             {/* Common Ministry Analytics Tab */}
             {currentTab === 'ministry_analytics' && <MinistryAnalyticsDashboard />}
+
+            {/* Common MoTA Samadhan Grievance & Helpdesk Tab */}
+            {currentTab === 'grievance_portal' && <GrievancePortal />}
 
             {/* 1. APPLICANT (TRIBAL SCHOLAR) PORTAL */}
             {activeRole === 'APPLICANT' && (

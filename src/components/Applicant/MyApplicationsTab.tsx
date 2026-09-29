@@ -10,12 +10,15 @@ import {
   Building2, 
   Calendar, 
   ShieldCheck, 
-  Eye,
-  X
+  Eye, 
+  Award,
+  X 
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { usePortalData } from '../../context/PortalDataContext';
 import { Application, STATUS_LABELS, STATUS_COLORS, ApplicationStatus } from '../../types';
+import { SanctionOrderModal } from './SanctionOrderModal';
+import { DeficiencyResponseModal } from './DeficiencyResponseModal';
 
 export const MyApplicationsTab: React.FC = () => {
   const { currentUser } = useAuth();
@@ -23,6 +26,9 @@ export const MyApplicationsTab: React.FC = () => {
 
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   const [showSlipModal, setShowSlipModal] = useState<Application | null>(null);
+  const [showSanctionModal, setShowSanctionModal] = useState<Application | null>(null);
+  const [deficiencyModalApp, setDeficiencyModalApp] = useState<Application | null>(null);
+  const [successToast, setSuccessToast] = useState<string>('');
 
   const myApps = applications.filter((a) => a.applicantId === currentUser?.id);
 
@@ -72,6 +78,13 @@ export const MyApplicationsTab: React.FC = () => {
           <strong className="text-xl font-extrabold text-blue-700">{myApps.length} Form(s)</strong>
         </div>
       </div>
+
+      {successToast && (
+        <div className="p-4 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-md flex items-center gap-2 animate-in fade-in">
+          <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+          <span>{successToast}</span>
+        </div>
+      )}
 
       {/* Applications List */}
       {myApps.length === 0 ? (
@@ -222,12 +235,20 @@ export const MyApplicationsTab: React.FC = () => {
 
                 {/* Important Alerts & Notes inside card */}
                 {app.status === 'DEFICIENT' && (
-                  <div className="p-3.5 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex items-start gap-2">
-                    <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <strong>Action Required from Student:</strong>
-                      <p className="mt-0.5">{app.verifierNotes}</p>
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <strong>Action Required from Student:</strong>
+                        <p className="mt-0.5">{app.verifierNotes}</p>
+                      </div>
                     </div>
+                    <button
+                      onClick={() => setDeficiencyModalApp(app)}
+                      className="self-start sm:self-center px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg transition-colors whitespace-nowrap shadow-xs"
+                    >
+                      Respond to Deficiency &amp; Re-Upload
+                    </button>
                   </div>
                 )}
 
@@ -250,25 +271,34 @@ export const MyApplicationsTab: React.FC = () => {
                 )}
 
                 {/* Bottom Card Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-slate-100 text-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-4 border-t border-slate-100 text-xs gap-3">
                   <div className="text-slate-500">
                     Attached Documents: <strong>{app.documentsAttached.length} verified files</strong>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {(app.status === 'COMMITTEE_APPROVED' || app.status === 'SCHOLARSHIP_RELEASED') && (
+                      <button
+                        onClick={() => setShowSanctionModal(app)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition-colors shadow-xs"
+                      >
+                        <Award className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>MoTA Award Letter (Sanction Order)</span>
+                      </button>
+                    )}
                     <button
                       onClick={() => setShowSlipModal(app)}
                       className="flex items-center gap-1.5 px-3 py-1.5 font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
                     >
                       <Download className="w-3.5 h-3.5 text-slate-600" />
-                      <span>Download Acknowledgment Slip</span>
+                      <span>Acknowledgment Slip</span>
                     </button>
                     <button
                       onClick={() => setSelectedApp(app)}
                       className="flex items-center gap-1.5 px-3 py-1.5 font-bold text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
                     >
                       <Eye className="w-3.5 h-3.5" />
-                      <span>Audit Trail Details</span>
+                      <span>Audit Trail</span>
                     </button>
                   </div>
                 </div>
@@ -387,6 +417,26 @@ export const MyApplicationsTab: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Official MoTA Sanction Order & Award Letter Modal */}
+      {showSanctionModal && (
+        <SanctionOrderModal
+          application={showSanctionModal}
+          onClose={() => setShowSanctionModal(null)}
+        />
+      )}
+
+      {/* Deficiency Rectification Response Modal */}
+      {deficiencyModalApp && (
+        <DeficiencyResponseModal
+          application={deficiencyModalApp}
+          onClose={() => setDeficiencyModalApp(null)}
+          onSuccess={(msg) => {
+            setSuccessToast(msg);
+            setTimeout(() => setSuccessToast(''), 6000);
+          }}
+        />
       )}
     </div>
   );

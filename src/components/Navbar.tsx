@@ -25,13 +25,15 @@ interface NavbarProps {
   onOpenAuthModal: () => void;
   onOpenSyncModal: () => void;
   onToggleMobileMenu: () => void;
+  onSwitchToPublicPortal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
   onOpenSpecsModal, 
   onOpenAuthModal, 
   onOpenSyncModal,
-  onToggleMobileMenu 
+  onToggleMobileMenu,
+  onSwitchToPublicPortal
 }) => {
   const { 
     currentUser, 
@@ -183,6 +185,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <FileCode2 className="w-3.5 h-3.5 text-blue-600" />
               <span>MoTA Architecture Specs</span>
             </button>
+
+            {/* tribal.nic.in Official Portal Button */}
+            {onSwitchToPublicPortal && (
+              <button
+                onClick={onSwitchToPublicPortal}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-bold bg-[#135d88] hover:bg-[#0c4a6e] text-white rounded-lg shadow-sm transition-all border border-blue-400/30 min-h-[38px]"
+                title="View official MoTA tribal.nic.in/ScholarshiP.aspx portal layout"
+              >
+                <Building2 className="w-3.5 h-3.5 text-amber-300" />
+                <span className="hidden sm:inline">tribal.nic.in Portal</span>
+              </button>
+            )}
 
             {/* Role Switcher / Impersonation Dropdown */}
             {(currentUser?.role === 'SUPER_ADMIN' || isImpersonating) ? (

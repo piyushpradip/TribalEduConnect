@@ -19,6 +19,7 @@ import {
   GraduationCap,
   Sparkles,
   BarChart3,
+  HelpCircle,
   X
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -59,6 +60,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'my_documents', label: t('myDocuments'), icon: <FolderLock className="w-4 h-4" /> },
           { id: 'seeding_status', label: t('seedingStatus'), icon: <CreditCard className="w-4 h-4" /> },
           { id: 'my_applications', label: t('myApplications'), icon: <FileText className="w-4 h-4" />, badge: 'Pipeline' },
+          { id: 'grievance_portal', label: 'MoTA Samadhan (Helpdesk)', icon: <HelpCircle className="w-4 h-4" />, badge: '72h SLA' },
         ];
 
       case 'SSO':
@@ -69,6 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'disbursement_queue', label: t('disbursementQueue'), icon: <Send className="w-4 h-4" />, badge: 'Action' },
           { id: 'fellowship_portal', label: 'NFST & NOS Fellowships', icon: <GraduationCap className="w-4 h-4" /> },
           { id: 'ministry_analytics', label: t('ministryAnalytics'), icon: <BarChart3 className="w-4 h-4" />, badge: 'MoTA' },
+          { id: 'grievance_portal', label: 'MoTA Samadhan (Helpdesk)', icon: <HelpCircle className="w-4 h-4" />, badge: 'Citizen SLA' },
           { id: 'disbursed_history', label: 'Disbursement Records', icon: <History className="w-4 h-4" /> },
         ];
 
