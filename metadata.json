@@ -1,0 +1,6 @@
+{
+  "name": "Scholarship Management Portal",
+  "description": "Comprehensive multi-role Scholarship Management Portal with RBAC, Aadhaar verification, real-time application pipelines, verifier certification, committee award screening, automated notifications, and Super Admin impersonation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

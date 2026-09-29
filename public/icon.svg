@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="motaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e3a8a" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  <!-- Background Shield -->
+  <rect width="512" height="512" rx="128" fill="url(#motaGrad)" />
+  <!-- Outer Gold Ring -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="url(#goldGrad)" stroke-width="12" stroke-dasharray="16 8" opacity="0.85" />
+  <!-- Center Graduation & Fellowship Emblem -->
+  <path d="M256 120 L400 190 L256 260 L112 190 Z" fill="#ffffff" />
+  <path d="M400 190 L400 280 C400 280 370 310 256 310 C142 310 112 280 112 280 L112 190 L256 260 Z" fill="#93c5fd" opacity="0.9" />
+  <!-- Tassel -->
+  <path d="M380 205 L380 320 C380 330 365 330 365 320 L365 212" stroke="url(#goldGrad)" stroke-width="8" stroke-linecap="round" fill="none" />
+  <circle cx="372" cy="326" r="14" fill="#f59e0b" />
+  <!-- Open Book of Knowledge / Constitution Art 342 -->
+  <path d="M160 360 C200 340 250 350 256 365 C262 350 312 340 352 360 L352 400 C312 380 262 390 256 405 C250 390 200 380 160 400 Z" fill="#ffffff" opacity="0.95" />
+  <line x1="256" y1="365" x2="256" y2="405" stroke="#1e3a8a" stroke-width="4" />
+</svg>
