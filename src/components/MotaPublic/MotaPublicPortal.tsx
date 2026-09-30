@@ -12,7 +12,8 @@ import {
   ShieldCheck,
   Building2,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  Search
 } from 'lucide-react';
 import { MotaHeader } from './MotaHeader';
 import { MotaHomeView } from './MotaHomeView';
@@ -20,6 +21,8 @@ import { MotaSchemesView } from './MotaSchemesView';
 import { MotaContactUs } from './MotaContactUs';
 import { MotaFiguresAtGlance } from './MotaFiguresAtGlance';
 import { MinistryAnalyticsDashboard } from '../Analytics/MinistryAnalyticsDashboard';
+import { AccessibilityBar } from '../Common/AccessibilityBar';
+import { TrackApplicationModal } from '../Applicant/TrackApplicationModal';
 import { useAuth } from '../../context/AuthContext';
 import { ScholarshipScheme } from '../../types';
 
@@ -38,9 +41,13 @@ export const MotaPublicPortal: React.FC<MotaPublicPortalProps> = ({
 }) => {
   const { currentUser, activeRole } = useAuth();
   const [activeTab, setActiveTab] = useState<MotaPublicTab>('contact_us'); // Defaults to 'contact_us' or 'home', matching user screenshot context!
+  const [showTrackModal, setShowTrackModal] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans">
+      {/* 0. Government Accessibility & Prototype Bar */}
+      <AccessibilityBar />
+
       {/* 1. Official Ashoka Emblem & MoTA Header */}
       <MotaHeader />
 
@@ -103,6 +110,15 @@ export const MotaPublicPortal: React.FC<MotaPublicPortalProps> = ({
                 }`}
               >
                 Fig.at a Glance
+              </button>
+
+              <button
+                onClick={() => setShowTrackModal(true)}
+                className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-bold transition-colors rounded-t-sm bg-amber-500/20 text-amber-200 hover:bg-amber-500/30 flex items-center gap-1"
+                title="Track Application Status in Real-Time"
+              >
+                <Search className="w-3.5 h-3.5 text-amber-300" />
+                <span>Track Application</span>
               </button>
             </div>
 
@@ -246,6 +262,13 @@ export const MotaPublicPortal: React.FC<MotaPublicPortalProps> = ({
           &copy; 2026 Ministry of Tribal Affairs, Government of India. All rights reserved. Content Owned by Ministry of Tribal Affairs, Hosted by National Informatics Centre (NIC).
         </div>
       </footer>
+
+      {/* Citizen Application Tracker Modal */}
+      {showTrackModal && (
+        <TrackApplicationModal
+          onClose={() => setShowTrackModal(false)}
+        />
+      )}
     </div>
   );
 };

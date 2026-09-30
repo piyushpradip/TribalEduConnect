@@ -1,1 +1,97 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --gov-deep-blue: #1D0A69;
+    --gov-white: #FFFFFF;
+    --gov-linen: #EBEAEA;
+    --gov-deep-earth: #150202;
+    --gov-liberty-green: #198754;
+    --gov-mustard-yellow: #FFC107;
+    --gov-teal: #0e486b;
+    --gov-forest: #0d5c46;
+  }
+
+  body {
+    font-family: 'Noto Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--gov-deep-earth);
+    background-color: #f8fafc;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* High contrast mode */
+  body.contrast-high {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+  }
+  body.contrast-high * {
+    border-color: #ffffff !important;
+  }
+  body.contrast-high .bg-white,
+  body.contrast-high .bg-slate-50,
+  body.contrast-high .bg-slate-100 {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+  }
+  body.contrast-high a,
+  body.contrast-high button {
+    text-decoration: underline !important;
+  }
+
+  /* Font size scaling */
+  body.text-scale-sm {
+    font-size: 87.5%;
+  }
+  body.text-scale-lg {
+    font-size: 112.5%;
+  }
+}
+
+/* Restrained Government UI Utilities */
+.gov-card {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.gov-header-bg {
+  background-color: #1D0A69;
+}
+
+.gov-subnav-bg {
+  background-color: #135d88;
+}
+
+.gov-btn-primary {
+  background-color: #1D0A69;
+  color: #ffffff;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: background-color 150ms ease-in-out;
+}
+.gov-btn-primary:hover {
+  background-color: #130649;
+}
+
+.gov-btn-secondary {
+  background-color: #ffffff;
+  color: #1D0A69;
+  border: 1px solid #1D0A69;
+  border-radius: 6px;
+  font-weight: 600;
+  transition: all 150ms ease-in-out;
+}
+.gov-btn-secondary:hover {
+  background-color: #f1f5f9;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

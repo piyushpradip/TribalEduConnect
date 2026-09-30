@@ -26,6 +26,7 @@ interface NavbarProps {
   onOpenSyncModal: () => void;
   onToggleMobileMenu: () => void;
   onSwitchToPublicPortal?: () => void;
+  onOpenTrackModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -33,7 +34,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuthModal, 
   onOpenSyncModal,
   onToggleMobileMenu,
-  onSwitchToPublicPortal
+  onSwitchToPublicPortal,
+  onOpenTrackModal
 }) => {
   const { 
     currentUser, 
@@ -176,14 +178,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* PWA Mobile App Install Prompt Button */}
             <PWAInstallButton />
 
+            {/* Citizen Application Track Button */}
+            {onOpenTrackModal && (
+              <button
+                onClick={onOpenTrackModal}
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-indigo-950 bg-amber-400 hover:bg-amber-300 border border-amber-500 rounded-md transition-colors shadow-xs"
+                title="Track Scholarship Application Status & DBT Disbursal"
+              >
+                <span>Track Status</span>
+              </button>
+            )}
+
             {/* Tech Specs & Architecture Button */}
             <button
               onClick={onOpenSpecsModal}
-              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg transition-colors"
+              className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-md transition-colors"
               title="View Database Schema, Architecture, State Machine & REST APIs"
             >
-              <FileCode2 className="w-3.5 h-3.5 text-blue-600" />
-              <span>MoTA Architecture Specs</span>
+              <FileCode2 className="w-3.5 h-3.5 text-indigo-900" />
+              <span>MoTA Specs</span>
             </button>
 
             {/* tribal.nic.in Official Portal Button */}

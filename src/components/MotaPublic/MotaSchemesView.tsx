@@ -16,6 +16,7 @@ import {
 import { MOTA_OFFICIAL_SCHEMES } from '../../mock/motaOfficialData';
 import { useAuth } from '../../context/AuthContext';
 import { ScholarshipScheme } from '../../types';
+import { SchemeDetailDrawer } from './SchemeDetailDrawer';
 
 interface MotaSchemesViewProps {
   onApplyScheme?: (scheme: ScholarshipScheme) => void;
@@ -215,6 +216,14 @@ export const MotaSchemesView: React.FC<MotaSchemesViewProps> = ({
 
                 <div className="flex items-center gap-2">
                   <button
+                    onClick={() => setSelectedScheme(scheme)}
+                    className="flex items-center gap-1 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold rounded-md text-xs border border-slate-300 transition-colors"
+                  >
+                    <Info className="w-3.5 h-3.5 text-indigo-900" />
+                    <span>View Details</span>
+                  </button>
+
+                  <button
                     onClick={() => {
                       if (currentUser) {
                         if (onApplyScheme) onApplyScheme(scheme);
@@ -222,7 +231,7 @@ export const MotaSchemesView: React.FC<MotaSchemesViewProps> = ({
                         if (onOpenAuth) onOpenAuth();
                       }
                     }}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl text-xs shadow-sm transition-all"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-[#1D0A69] hover:bg-[#130649] text-white font-bold rounded-md text-xs shadow-xs transition-all"
                   >
                     <span>Apply Online</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -233,6 +242,21 @@ export const MotaSchemesView: React.FC<MotaSchemesViewProps> = ({
           </div>
         ))}
       </div>
+
+      {/* Scheme Detail Gazette Drawer */}
+      {selectedScheme && (
+        <SchemeDetailDrawer
+          scheme={selectedScheme}
+          onClose={() => setSelectedScheme(null)}
+          onApply={(sch) => {
+            if (currentUser) {
+              if (onApplyScheme) onApplyScheme(sch);
+            } else {
+              if (onOpenAuth) onOpenAuth();
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

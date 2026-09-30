@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { PortalDataProvider } from './context/PortalDataContext';
+import { PortalDataProvider, usePortalData } from './context/PortalDataContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { OfflineSyncIndicator } from './components/OfflineSyncIndicator';
+import { AccessibilityBar } from './components/Common/AccessibilityBar';
+import { GovernmentBanner } from './components/Common/GovernmentBanner';
 
 // Role-based Views
 import { ApplicantDashboard } from './components/Applicant/ApplicantDashboard';
@@ -14,6 +16,10 @@ import { StateSchemesTab } from './components/Applicant/StateSchemesTab';
 import { MyDocumentsTab } from './components/Applicant/MyDocumentsTab';
 import { SeedingStatusTab } from './components/Applicant/SeedingStatusTab';
 import { MyApplicationsTab } from './components/Applicant/MyApplicationsTab';
+import { TrackApplicationModal } from './components/Applicant/TrackApplicationModal';
+import { ApplySchemeModal } from './components/Applicant/ApplySchemeModal';
+import { DeficiencyResponseModal } from './components/Applicant/DeficiencyResponseModal';
+import { SanctionOrderModal } from './components/Applicant/SanctionOrderModal';
 
 import { FellowshipPortal } from './components/Fellowship/FellowshipPortal';
 import { AiScrutinyTab } from './components/AiScrutiny/AiScrutinyTab';
@@ -25,17 +31,25 @@ import { VerifiersPortal } from './components/Verifiers/VerifiersPortal';
 import { CommitteePortal } from './components/Committee/CommitteePortal';
 import { SuperAdminPortal } from './components/SuperAdmin/SuperAdminPortal';
 
+import { MotaPublicPortal } from './components/MotaPublic/MotaPublicPortal';
 import { AuthModal } from './components/Auth/AuthModal';
 import { ArchitectureSpecsModal } from './components/Specs/ArchitectureSpecsModal';
 import { DeviceSyncModal } from './components/Sync/DeviceSyncModal';
+import { ScholarshipScheme, Application } from './types';
 
 const MainPortalContent: React.FC = () => {
   const { activeRole } = useAuth();
+  const { applications } = usePortalData();
   const { t } = useLanguage();
+  const [viewMode, setViewMode] = useState<'WORKSPACE' | 'PUBLIC'>('WORKSPACE');
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
   const [showSpecsModal, setShowSpecsModal] = useState<boolean>(false);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [showSyncModal, setShowSyncModal] = useState<boolean>(false);
+  const [showTrackModal, setShowTrackModal] = useState<boolean>(false);
+  const [applySchemeTarget, setApplySchemeTarget] = useState<ScholarshipScheme | null>(null);
+  const [deficiencyApp, setDeficiencyApp] = useState<Application | null>(null);
+  const [sanctionAppTarget, setSanctionAppTarget] = useState<Application | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Reset tab to dashboard when activeRole changes
@@ -43,14 +57,49 @@ const MainPortalContent: React.FC = () => {
     setCurrentTab('dashboard');
   }, [activeRole]);
 
+  // If in Citizen Public Portal view (matches tribal.nic.in/ScholarshiP.aspx)
+  if (viewMode === 'PUBLIC') {
+    return (
+      <>
+        <MotaPublicPortal
+          onOpenAuth={() => setShowAuthModal(true)}
+          onSwitchToWorkspace={() => setViewMode('WORKSPACE')}
+          onApplyScheme={(scheme) => {
+            setApplySchemeTarget(scheme);
+            setViewMode('WORKSPACE');
+          }}
+        />
+        {/* Global Modals */}
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
+        {showSpecsModal && <ArchitectureSpecsModal onClose={() => setShowSpecsModal(false)} />}
+        {showSyncModal && <DeviceSyncModal onClose={() => setShowSyncModal(false)} />}
+        {showTrackModal && (
+          <TrackApplicationModal
+            onClose={() => setShowTrackModal(false)}
+            onOpenDeficiency={(app) => setDeficiencyApp(app)}
+            onOpenSanction={(app) => setSanctionAppTarget(app)}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col font-sans antialiased text-slate-800 pb-16 md:pb-0">
-      {/* Top Navbar */}
+    <div className="min-h-screen bg-slate-100 flex flex-col font-sans antialiased text-slate-800 pb-16 md:pb-0" id="main-content">
+      {/* 0. Government Accessibility & Prototype Bar */}
+      <AccessibilityBar />
+
+      {/* 1. Official Government of India & MoTA National Banner */}
+      <GovernmentBanner />
+
+      {/* 2. Top Navbar */}
       <Navbar
         onOpenSpecsModal={() => setShowSpecsModal(true)}
         onOpenAuthModal={() => setShowAuthModal(true)}
         onOpenSyncModal={() => setShowSyncModal(true)}
         onToggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
+        onSwitchToPublicPortal={() => setViewMode('PUBLIC')}
+        onOpenTrackModal={() => setShowTrackModal(true)}
       />
 
       {/* Main Body with Sidebar + Active View */}
@@ -168,6 +217,40 @@ const MainPortalContent: React.FC = () => {
 
       {showSyncModal && (
         <DeviceSyncModal onClose={() => setShowSyncModal(false)} />
+      )}
+
+      {showTrackModal && (
+        <TrackApplicationModal
+          onClose={() => setShowTrackModal(false)}
+          onOpenDeficiency={(app) => setDeficiencyApp(app)}
+          onOpenSanction={(app) => setSanctionAppTarget(app)}
+        />
+      )}
+
+      {applySchemeTarget && (
+        <ApplySchemeModal
+          scheme={applySchemeTarget}
+          onClose={() => setApplySchemeTarget(null)}
+          onSuccess={() => {
+            setApplySchemeTarget(null);
+            setCurrentTab('my_applications');
+          }}
+        />
+      )}
+
+      {deficiencyApp && (
+        <DeficiencyResponseModal
+          application={deficiencyApp}
+          onClose={() => setDeficiencyApp(null)}
+          onSuccess={() => setDeficiencyApp(null)}
+        />
+      )}
+
+      {sanctionAppTarget && (
+        <SanctionOrderModal
+          application={sanctionAppTarget}
+          onClose={() => setSanctionAppTarget(null)}
+        />
       )}
     </div>
   );
